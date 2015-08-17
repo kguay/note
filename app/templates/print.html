@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Edit Report{% endblock %}
+
+{% block page_content %}
+<div class='no-print'>
+    <table width=100% border="0" style='padding:0px; spacing:0px; border-width:0px;'>
+		<tr>
+			<td width=50% align='left' valign='bottom'><h3>Print Expense Report</h3></td>
+			<td width=50% align='right' valign='bottom'><h4><a href="javascript:window.print()">Print</a></h4></td>
+		</tr>
+	</table>
+</div>
+</br>
+
+<div class='visible-print-block'>
+<img src='/static/bigelow-logo.png' height=50>
+<div class='hrule' style="height:" height="4px"></div>
+</div>
+
+
+
+<table width=100% border="0" style='padding:0px; spacing:0px; border-width:0px;'>
+	<tr>
+		<td width=33% valign='bottom'><b>Name:</b> {{ expense.username }} </td>
+		
+		<td width=33% valign='bottom'><b>Date Submitted:</b> {{ expense.submit_date }} </td>
+		
+		<td width=33% valign='bottom'><b>Date Purchased:</b> {{ expense.purchase_date }} </td>
+	</tr>
+	<tr><td></br></td><td></td><td></td><td></td></tr>
+	<tr>
+		<td width=33% valign='bottom'><b>Amount:</b> ${{ expense.amount }} </td>
+		
+		<td width=33% valign='bottom'><b>Account:</b> {{ expense.account }} </td>
+		
+		<td width=33% valign='bottom'><b>Vendor:</b> {{ expense.vendor }} </td>
+	</tr>
+	<tr><td></br></td><td></td><td></td><td></td></tr>
+	<tr>
+		<td width=33% valign='bottom'><b>Status: </b>
+			{% if expense.approved %}
+				Approved
+			{% else %}
+				Pending
+			{% endif %}
+		</td>
+		
+		<td width=66% colspan=2 valign='bottom'><b>Description:</b> {{ expense.description }} </td>
+	</tr>
+</table>
+
+
+ 
+</br>
+
+{% endblock %}

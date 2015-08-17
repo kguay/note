@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block title %}FAQ{% endblock %}
+
+{% block page_content %}
+<div>
+    <table width=100% border="0" style='padding:0px; spacing:0px; border-width:0px;'>
+		<tr>
+			<td width=50% align='left' valign='bottom'><h3>Frequently Asked Questions</h3></td>
+			{% if current_user.is_authenticated() %}
+			<td width=50% align='right' valign='bottom'><h4>You are logged in as {{ current_user.full_name }} ({{ current_user.username }})</h4></td>
+			{% else %}
+			<td width=50% align='right' valign='bottom'><h4>You are not currently logged in: <a href="{{ url_for('auth.login') }}">Log In</a></h4></td>
+			{% endif %}
+		</tr>
+	</table>
+</div>
+</br>
+
+<h5>Logging In</h5>
+<a href="#How do I create a user account?">How do I create a user account?</a>
+</br>
+<a href="#I can't log in.">I can't log in.</a>
+</br>
+
+<h5>Expense Reports</h5>
+<a href="#How do I submit a new expense report?">How do I submit a new expense report?</a>
+</br>
+<a href="#How do I edit an expense report?">How do I edit an expense report?</a>
+</br>
+<a href="#Why can't I edit my expense report?">Why can't I edit my expense report?</a>
+</br>
+<a href="#How do I upload a different receipt?">How do I upload a different receipt?</a>
+</br>
+<a href="#How do I sort my reports?">How do I sort my reports?</a>
+</br>
+<a href="#How do I delete a report?">How do I delete a report?</a>
+
+{% if current_user.is_authenticated() %}
+{% if current_user.is_administrator() %}
+<h5>Administration</h5>
+<a href="#How do I approve another employee's expense report?">How do I approve another employee's expense report?</a>
+</br>
+<a href="#How do I unapprove a claim?">How do I unapprove a claim?</a>
+</br>
+{% endif %}
+{% endif %}
+
+</br>
+
+<a name="How do I create a user account?"></a><h4>How do I create a user account?</h4>
+	<p style='padding-left: 22px;'>
+		You can create a new user account by clicking on the <i>Log In</i> button in the top left corner of the screen. At the bottom of the page, click on the <i>Click here to register</i> link.
+	</p>
+</br>
+
+<a name="I can't log in."></a>
+	<h4>I can't log in.</h4>
+	<p style='padding-left: 22px;'>
+		Click on the <i>Log In</i> link at the top of the screen. You can log in with your username {% if current_user.is_authenticated() %}({{ current_user.username }}, {% else %} ({% endif %}not your full name) or your email address. Enter your password. Please contact your administrator if you can not remember your password.
+	</p>
+</br>
+
+<a name="How do I submit a new expense report?"></a>
+	<h4>How do I submit a new expense report?</h4>
+	<p style='padding-left: 22px;'>
+		Click on {% if current_user.is_authenticated() %}<a href="{{ url_for('main.review') }}">New Report</a>{% else %}<i>New Report</i>{% endif %} in the top navigation bar. Fill out <i>all</i> fields and select a PDF file of the receipt for the purchase.
+	</p>
+</br>
+
+<a name="How do I edit an expense report?"></a>
+	<h4>How do I edit an expense report?</h4>
+	<p style='padding-left: 22px;'>
+		Click on {% if current_user.is_authenticated() %}<a href="{{ url_for('main.review') }}">My Reports</a>{% else %}<i>My Reports</i>{% endif %} in the top navigation bar.
+		Click on the edit icon (<a data-toggle="tooltip" title="Edit"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>) next to the report that you want to edit. Make sure that all fields are filled in before clicking <i>update</i>. You are <i>not</i> required to upload a new receipt file.
+	</p>
+</br>
+
+<a name="Why can't I edit my expense report?"></a>
+	<h4>Why can't I edit my expense report?</h4>
+	<p style='padding-left: 22px;'>
+		Once an expense report has been approved, you are not able to edit it. Please contact the administrator to make changes to an approved report.
+	</p>
+</br>
+
+<a name="How do I upload a different receipt?"></a>
+	<h4>How do I upload a different receipt?</h4>
+	<p style='padding-left: 22px;'>
+		Click on the edit icon (<a data-toggle="tooltip" title="Edit"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>). Click the "Upload New Receipt" link under <b>Receipt</b>. Click <i>Choose File</i> and select the new PDF file. Click the <i>Update</i> button to save the changes.
+	</p>
+</br>
+
+<a name="How do I sort my reports?"></a>
+	<h4>How do I sort my reports?</h4>
+	<p style='padding-left: 22px;'>
+		Navigate to the 
+		{% if current_user.is_authenticated() %}
+			<a href="{{ url_for('main.review') }}">My Reports</a>
+		{% else %}
+			<i>My Reports</i>
+		{% endif %}
+		
+		{% if current_user.is_authenticated() %}
+		{% if current_user.is_administrator() %}
+		or <a href="{{ url_for('main.approve') }}">Approve</a>
+		{% endif %}
+		{% endif %}
+		 page and click on a column name (e.g. Status) to sort by that column. Click on the column name again to reverse the sort order.
+	</p>
+</br>
+	
+<a name="How do I delete a report?"></a>
+	<h4>How do I delete a report?</h4>
+	<p style='padding-left: 22px;'>
+		Click on the edit icon (<a data-toggle="tooltip" title="Edit"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>) next to the report that you want to delete. At the bottom of the form there is a yellow "Delete" button. Click it twice to delete the record.
+	</p>
+
+
+{% if current_user.is_authenticated() %}
+{% if current_user.is_administrator() %}
+</br>
+<a name="How do I approve another employee's expense report?"></a>
+	<h4>How do I approve another employee's expense report?</h4>
+	<p style='padding-left: 22px;'>
+		Click on <a href="{{ url_for('main.approve') }}">Approve</a> in the top navigation bar. Click the <a data-toggle="tooltip" title="Approve"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></a> in the action column next to the claim that you want to approve.
+	</p>
+</br>
+
+<a name="How do I unapprove a claim?"></a>
+	<h4>How do I unapprove a claim?</h4>
+	<p style='padding-left: 22px;'>
+		Click on <a href="{{ url_for('main.approve') }}">Approve</a> in the top navigation bar. Click the <a data-toggle="tooltip" title="Undo Approve"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a> in the action column next to the claim that you want to approve.
+	</p>
+{% endif %}
+{% endif %}
+
+</br>
+
+</div>
+{% endblock %}

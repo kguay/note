@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}My Expense Reports{% endblock %}
+
+{% block page_content %}
+<div>
+    <table width=100% border="0" style='padding:0px; spacing:0px; border-width:0px;'>
+		<tr>
+			<td width=50% align='left' valign='bottom'><h3>My Reports</h3></td>
+			<td width=50% align='right' valign='bottom'><h4><a href="{{ url_for('main.new_report') }}">New Report</a></h4></td>
+		</tr>
+	</table>
+</div>
+</br>
+
+<div class='table-responsive'>
+	<table class='table tablehover' style='font-size:12px;'>
+		<thead>
+			<tr class='no-hover'>
+				<td style='vertical-align: bottom;' class='col-sm-1 col-md-1 col-xs-1'>
+					{% if orderby == 'username desc' %}
+					<a href="/review?sort=username asc"><b>Employee</b></a>
+					{% else %}
+					<a href="/review?sort=username desc"><b>Employee</b></a>
+					{% endif %}
+				</td>
+				<td style='vertical-align: bottom;' class='col-sm-1 col-md-1 col-xs-1'>
+					{% if orderby == 'timestamp desc' %}
+					<a href="/review?sort=timestamp asc"><b>Date Submitted</b></a>
+					{% else %}
+					<a href="/review?sort=timestamp desc"><b>Date Submitted</b></a>
+					{% endif %}
+				</td>
+				<td style='vertical-align: bottom;' class='col-sm-1 col-md-1 col-xs-1'>
+					<div style='color:#347ABB;'><b>Date Purchased</b></div>
+					
+				</td>
+				<td style='vertical-align: bottom;' class='col-sm-3 col-md-3 col-xs-3'>
+					{% if orderby == 'description desc' %}
+					<a href="/review?sort=description asc"><b>Description</b></a>
+					{% else %}
+					<a href="/review?sort=description desc"><b>Description</b></a>
+					{% endif %}
+				</td>
+			
+				<td style='vertical-align: bottom;' class='col-sm-1 col-md-1 col-xs-1'>
+					{% if orderby == 'vendor desc' %}
+					<a href="/review?sort=vendor asc"><b>Vendor</b></a>
+					{% else %}
+					<a href="/review?sort=vendor desc"><b>Vendor</b></a>
+					{% endif %}
+				</td>
+			
+				<td align='right' style='vertical-align: bottom;' class='col-sm-1 col-md-1 col-xs-1'>
+					<div style='color:#347ABB;'><b>Amount</b></div>
+				</td>
+				<td style='vertical-align: bottom;' class='col-sm-1 col-md-1 col-xs-1'>
+					{% if orderby == 'account desc' %}
+					<a href="/review?sort=account asc"><b>Account</b></a>
+					{% else %}
+					<a href="/review?sort=account desc"><b>Account</b></a>
+					{% endif %}
+				</td>
+				<td style='vertical-align: bottom;' class='col-sm-1 col-md-1 col-xs-1'>
+					<div style='color:#347ABB;'><b>Receipt</b></div></td>
+				<td style='vertical-align: bottom;' class='col-sm-1 col-md-1 col-xs-1'>
+					{% if orderby == 'approved desc' %}
+					<a href="/review?sort=approved asc"><b>Status</b></a>
+					{% else %}
+					<a href="/review?sort=approved desc"><b>Status</b></a>
+					{% endif %}
+				</td>
+				<td style='vertical-align: bottom;' class='col-sm-1 col-md-1 col-xs-1'>
+					<div style='color:#347ABB;'><b>Actions</b></div>
+				</td>
+				
+			</tr>
+		</thead>
+		<tbody>
+			{% if data %}
+				{% for d in data %}
+					{% if d.approved > 0 %}
+						<tr>
+					{% else %}
+						<tr>
+					{% endif %}
+					<td>{{d.username}}</td>
+					<td>{{d.submit_date}}</td>
+					<td>{{d.purchase_date}}</td>
+					<td>{{d.description}}</td>
+					<td>{{d.vendor}}</td>
+					<td align='right'>${{d.amount}}</td>
+					<td>{{d.account}}</td>
+				
+					{% if d.receipt %}
+						<td><a href="static{{d.receipt}}", target='_blank'>PDF</a></td>
+					{% else %}
+						<td></td>
+					{% endif %}
+				
+					{% if d.approved %}
+					<td style='color:green;'>Approved</td>
+					{% else %}
+					<td style='color:darkred;'>Pending</td>
+					{% endif %}
+				
+					<td>
+					{% if not d.approved %}
+					<a href="/edit/{{d.id}}" data-toggle="tooltip" title="Edit"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+					{% else %}
+					<span class="glyphicon glyphicon-none" style='content: "\e094";' aria-hidden="true"></span>
+					{% endif %}
+					&nbsp;&nbsp;<a href="/print/{{d.id}}" data-toggle="tooltip" title="Print"><span class="glyphicon glyphicon-print" aria-hidden="true"></span></a></td>
+				
+					</tr>
+				{% endfor %}
+			{% else %}
+				<tr class='no-hover'><td colspan="9" align=center>You don't have any expense reports yet!
+					<a href="{{ url_for('main.new_report') }}">Create a new report now</a>
+					{% if current_user.is_authenticated() and current_user.is_administrator() %}
+					or <a href="{{ url_for('main.approve') }}">approve other employees expenses</a>
+					{% endif %}
+				</td class='no-hover'></tr>
+			{% endif %}
+		</tbody>
+	</table>
+</div>
+
+</br></br>
+{% endblock %}

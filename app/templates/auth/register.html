@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Register{% endblock %}
+
+{% block page_content %}
+<div>
+    <table width=100% border="0" style='padding:0px; spacing:0px; border-width:0px;'>
+		<tr>
+			<td width=50% align='left' valign='bottom'><h3>Register</h3></td>
+			{% if current_user.is_authenticated() %}
+			<td width=50% align='right' valign='bottom'><h4><a href="{{ url_for('main.review') }}">Cancel</a></h4></td>
+			{% else %}
+			<td width=50% align='right' valign='bottom'><h4><a href="{{ url_for('main.faq') }}">FAQ</a></h4></td>
+			{% endif %}
+		</tr>
+	</table>
+</div>
+</br>
+<form method="post" class="form" role="form">	
+	{{ form.csrf_token }}  
+
+	{{ wtf.form_field(form.username, placeholder='Bigelow Username', autofocus='autofocus') }}
+	{{ wtf.form_field(form.full_name, placeholder='First Last') }}
+	{{ wtf.form_field(form.email, placeholder='@bigelow.org') }}
+	{{ wtf.form_field(form.password) }}
+	{{ wtf.form_field(form.password2) }}
+	
+	
+<input class="btn btn-primary" id="submit" name="submit" type="submit" value="Register">
+
+</form>
+    <br>
+	 {% if current_user.is_authenticated() %}
+    <p>Already a user? <a href="{{ url_for('auth.login') }}">Click here to log in</a>.</p>
+	{% endif %}
+{% endblock %}

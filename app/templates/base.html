@@ -1,0 +1,108 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}Bigelow{% endblock %}
+
+{% block head %}
+{{ super() }}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Bootstrap -->
+<link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet" media="screen">
+	
+<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+<link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+
+<link href="/static/main.css" rel="stylesheet">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<script>
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();   
+});
+</script>
+
+
+{% endblock %}
+
+{% block navbar %}
+
+<div class="navbar navbar-inverse no-print" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="hidden-sm hidden-xs" href="{{ url_for('main.index') }}"><img src='/static/bigelow-logo.png' height=50></img></a>
+            <a class="visible-sm hidden-xs" href="{{ url_for('main.index') }}"><img src='/static/bigelow-logo-sml.png' height=50></img></a>
+            <a class="hidden-sm visible-xs" href="{{ url_for('main.index') }}">&nbsp;&nbsp;&nbsp;<img src='/static/bigelow-logo-sml.png' height=50></img></a>
+			
+        </div>
+		
+
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                {% if current_user.is_authenticated() %}
+				<li><a href="{{ url_for('main.new_report') }}">New Report</a></li>
+                <li><a href="{{ url_for('main.review') }}">My Reports</a></li>
+            	{% if current_user.is_administrator() %}
+                <li><a href="{{ url_for('main.approve') }}">Approve</a></li>
+				{% endif %}
+				{% endif %}
+			</ul>
+			<ul class="nav navbar-nav navbar-right">				
+                {% if current_user.is_authenticated() %}
+                <li><a href="{{ url_for('auth.logout') }}">Log Out ({{ current_user.full_name }})</a></li>
+                {% else %}
+                <li><a href="{{ url_for('auth.login') }}">Log In</a></li>
+                {% endif %}
+            </ul>
+			
+			{% if current_user.is_authenticated() and current_user.is_administrator() %}
+            <ul class="nav navbar-nav navbar-right">			
+				<li><a href="{{ url_for('auth.register') }}">Add User</a></li>
+            </ul>
+			{% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ message }}
+    </div>
+    {% endfor %}
+
+    {% block page_content %}{% endblock %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<footer class="footer no-print">
+  <div class="container hidden-xs">
+	<table width=100% border="0" style='padding:0px; spacing:0px; border-width:0px;' class='text-muted'>
+		<tr>
+			<td align='left' valign='bottom'>&copy; Bigelow Laboratory for Ocean Sciences 2015</td>
+			<td align='right' valign='bottom'><a href="{{ url_for('main.faq') }}">FAQ</a>&nbsp;|&nbsp;<a href='https://www.bigelow.org/dashboard/' target="_blank">Intranet</a>&nbsp;|&nbsp;<a href='https://www.bigelow.org' target="_blank">Bigelow Home</a> </td>
+		</tr>
+	</table>
+  </div>
+ 
+  <div class="container visible-xs">
+	<table width=100% border="0" style='padding:0px; spacing:0px; border-width:0px;' class='text-muted'>
+		<tr>
+			<td align='left' valign='bottom'>&copy; Bigelow 2015</td>
+			<td align='right' valign='bottom'><a href="{{ url_for('main.faq') }}">FAQ</a>&nbsp;|&nbsp;<a href='https://www.bigelow.org/dashboard/' target="_blank">Intranet</a>&nbsp;|&nbsp;<a href='https://www.bigelow.org' target="_blank">Home</a> </td>
+		</tr>
+	</table>
+  </div>
+</footer>
+{% endblock %}
+

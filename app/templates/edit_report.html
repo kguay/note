@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Edit Report{% endblock %}
+
+{% block page_content %}
+<div>
+    <table width=100% border="0" style='padding:0px; spacing:0px; border-width:0px;'>
+		<tr>
+			<td width=50% align='left' valign='bottom'><h3>Edit Expense Report</h3></td>
+			<td width=50% align='right' valign='bottom'><h4><a href="{{ request.args.get('next') or url_for('main.review') }}">Cancel</a></h4></td>
+		</tr>
+	</table>
+</div>
+</br>
+
+<style>
+
+.form-inline > * {
+    margin:10px 3px !important;
+}
+</style>
+	
+<form method="post" enctype="multipart/form-data" class="form" role="form">
+
+	{{ form.csrf_token }}  
+
+<div class="form-group col-md-4"><label class="control-label" for="name">Name</label>
+	<style class='form-control'>{{ name }}</style>
+</div>
+
+<div class="col-md-4">
+	{{ wtf.form_field(form.submit_date) }}
+</div>
+
+<div class="col-md-4">
+	{{ wtf.form_field(form.purchase_date, placeholder="MM-DD-YYYY") }}	  
+</div>
+
+<div class="col-md-4">
+    {{ wtf.form_field(form.amount, placeholder="00.00") }}
+</div>
+
+<div class="col-md-4">
+    {{ wtf.form_field(form.account, placeholder='000000') }}
+</div>
+
+<div class="col-md-4">
+	  {{ wtf.form_field(form.vendor) }}
+	  <div id="other" style='padding-bottom:15px;'></div>
+</div>
+
+<div class="col-md-8">
+	{{ wtf.form_field(form.description, placeholder="Description/ Purpose") }}
+</div>
+</br>
+<div id="receipt_div" class="col-md-4">
+	<label class="control-label" for="receipt">Receipt</label></br>
+	<a href="/static{{form.receipt.data}}", target='_blank'><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> &nbsp;Download</a>
+</br>
+	<div id="upload_new" name="upload_new"><a onclick="jsfunction()" href="javascript:upload_new_receipt();">Upload New Receipt</a></div>
+</div>
+
+{% if current_user.is_administrator() %}
+<div class="col-md-12">
+    {{ wtf.form_field(form.approved) }} 
+</div>
+{% endif %}
+<div class="col-md-12"></div>
+<div class="col-md-1"><input class="btn btn-primary" id="submit" name="submit" type="submit" value="Update"></div>
+
+<div class="col-md-2"><input class="btn btn-default" onClick="history.go(0)" id="undo" name="undo" type="button" value="Undo Changes"></div>
+
+<div class="col-md-1"><input class="btn btn-warning" onClick="change()" id="delete" name="delete" type="button" value="Delete"></div>
+
+
+</form> 
+ 
+</br>
+  
+<script>
+// this JS function handles "other" vendors. A new text box is created for 
+//  the user to fill in a custom vendor.
+document.getElementById("vendor").onchange = function() {
+    if (this.value == "Other") {
+		// fill the 'other' div with the other vendor text imput
+        document.getElementById("other").innerHTML = "<input class='form-control' id='other_vendor' name='other_vendor' type='text' value=''>";
+		// put focus on the other text input
+		document.getElementById("other_vendor").focus()
+    }
+	else{
+		// "hide"/ delete content from "other" div
+        document.getElementById("other").innerHTML = '';
+		// otherwise put the focus on the next field (description) when clicked
+		document.getElementById("description").focus()
+	}
+};
+</script>
+<script type="text/javascript">
+function change()
+{
+    var elem = document.getElementById("delete");
+    if (elem.value=="Delete"){
+    	elem.className = "btn btn-danger";
+		elem.value = "Are you sure that you want to delete this report?";
+    } 
+    else window.location.href = "/delete/{{expense.id}}?next={{next}}";
+}
+function upload_new_receipt()
+{
+	var elem = document.getElementById("upload_new");
+	elem.style.visibility = "hidden";
+	document.getElementById("receipt_div").innerHTML = "<label class='control-label' for='receipt'>Receipt</label></br><input class='form-control' id='receipt' name='receipt' type='file'>"
+	document.getElementById("receipt_div").className="col-md-4";
+}
+</script>
+<script>
+window.onload = function() {
+    if (document.getElementById("vendor").value == "Other") {
+		// fill the 'other' div with the other vendor text imput
+        document.getElementById("other").innerHTML = "<input class='form-control' id='other_vendor' name='other_vendor' type='text' value='' placeholder='Vendor Name'>";
+		// put focus on the other text input
+		document.getElementById("other_vendor").focus()
+    }
+	else{
+		// "hide"/ delete content from "other" div
+        document.getElementById("other").innerHTML = '';
+		// otherwise put the focus on the next field (description) when clicked
+		document.getElementById("description").focus()
+	}
+};
+</script>
+{% endblock %}

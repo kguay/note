@@ -1,0 +1,44 @@
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+.navbar {
+  color: #FFF;
+  background-color: #EAF2F6;
+  border: 0px solid #004d75;
+  border-top: 5px solid #004d75;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  background-color: #EAF2F6;
+}
+.container .text-muted {
+  margin: 20px 0;
+}
+* {
+  border-radius: 0 !important;
+}
+
+.navbar .nav > li > a { 
+	color: black; 
+} 
+
+/* set hover and focus to lightblue */ 
+.navbar .nav > li > a:focus, 
+.navbar .nav > li > a:hover { 
+	color: black; 
+}
+/* set active item to darkgreen */ 
+.navbar .nav > .active > a, 
+.navbar .nav > .active > a:hover, 
+.navbar .nav > .active > a:focus { 
+	color: black; 
+} 

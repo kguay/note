@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# load the virtual environment including required python modules
+source venv/bin/activate
+
+# run the application with the virtual environment's python install
+./venv/bin/python main.py
+
+deactivate
